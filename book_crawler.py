@@ -23,7 +23,7 @@ class BookInfo:
 
 @dataclass
 class BookCrawler:
-    domain: str = "http://books.toscrape.com"
+    domain: str = "https://books.toscrape.com"
     logger: logging.Logger = log_utils.create_logger("BookCrawler")
 
 
@@ -51,7 +51,7 @@ class BookCrawler:
                     continue
                 book_soup = bs4.BeautifulSoup(book_content, "html.parser")
                 title = book_soup.find("h1").text
-                description = book_soup.find("article", class_="product_page").find("p").text
+                description = book_soup.find("div", id="product_description").find_next("p").text
 
                 yield BookInfo(title, description)
 

@@ -12,9 +12,12 @@ set(CMAKE_CXX_STANDARD 26)
 
 # TODO: set compiler flags
 
-# add_subdirectory(src)
+add_subdirectory(src)
 
+enable_testing()
+add_subdirectory(tests)
 
 
 add_executable(main)
 target_sources(main PRIVATE main.cpp)
+target_link_libraries(main PRIVATE tars)

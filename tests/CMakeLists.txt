@@ -6,7 +6,14 @@ FetchContent_Declare(
     GIT_TAG v1.17.0
 )
 
-FetcContent_MakeAvailable(googletest)
+FetchContent_MakeAvailable(googletest)
 
-# include(GoogleTest)
-# gtest_discover_tests(hello_test)
+add_executable(
+    test_mp
+)
+target_sources(test_mp PRIVATE test_mp.cpp)
+target_link_libraries(test_mp PRIVATE GTest::gtest_main tars)
+# target_include_directories(test_mp PRIVATE ${TARS_SOURCE_DIR}/src)    
+    
+include(GoogleTest)
+gtest_discover_tests(test_mp)

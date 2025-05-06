@@ -1,0 +1,6 @@
+option(TARS_BUILD_TESTS "Build tests" OFF)
+option(TARS_BUILD_DOCUMENTATION "Build documentation" OFF)
+option(TARS_RUN_CLANG_TIDY "Run clang-tidy" OFF)
+option(TARS_RUN_CPPCHECK "Run cppcheck" OFF)
+option(TARS_RUN_ADDRESS_SANITIZER "Run address sanitizer" OFF)
+option(TARS_BUILD_PROFILER "Build with profiler" OFF)

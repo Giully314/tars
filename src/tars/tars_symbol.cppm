@@ -20,6 +20,7 @@ export module tars.symbol;
 import std;
 import tars.mp;
 import tars.type_traits;
+import tars.algebraic_traits;
 
 namespace tars {
 
@@ -54,22 +55,24 @@ SymbolBinder(TSymbol, T&&) -> SymbolBinder<TSymbol, T&&>;
 
 /// @brief Define the Symbol class, the atom of a formula.
 /// This class defines the core type representing a symbol abstraction in a formula.
-/// @tparam Should be ignored and not specified, it is used to define different unique types for the
-/// Symbol.
-export template<auto ID = [] {}>
+/// @tparam Trait Specify the algebraic trait of the symbol.
+/// @tparam ID Should be ignored and not specified, it is used to define different unique types for
+/// the Symbol.
+export template<typename Trait = Uncostrained, auto ID = [] {}>
 struct Symbol {
     // This variable is used as a unique id for comparison and ordering.
     static constexpr const void* address = std::addressof(ID);
 
     template<typename T>
+        requires(Trait::template trait<std::remove_cvref_t<T>>::value)
     constexpr auto operator=(T&& value) -> SymbolBinder<Symbol, T&&> {
         return SymbolBinder{*this, std::forward<T>(value)};
     }
 };
 
-export template<auto Lhs, auto Rhs>
-constexpr auto operator<=>(Symbol<Lhs>, Symbol<Rhs>) -> std::strong_ordering {
-    return std::compare_three_way{}(Symbol<Lhs>::address, Symbol<Rhs>::address);
+export template<typename Tlhs, auto Lhs, typename Trhs, auto Rhs>
+constexpr auto operator<=>(Symbol<Tlhs, Lhs>, Symbol<Trhs, Rhs>) -> std::strong_ordering {
+    return std::compare_three_way{}(Symbol<Tlhs, Lhs>::address, Symbol<Trhs, Rhs>::address);
 }
 
 } // namespace tars

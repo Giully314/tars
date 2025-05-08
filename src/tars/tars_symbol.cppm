@@ -17,13 +17,59 @@
 
 export module tars.symbol;
 
+import std;
+import tars.mp;
+import tars.type_traits;
+
 namespace tars {
+
+/// @brief Class binder for symbol.
+/// @tparam T Type of the value to be assigned to a symbol.
+/// @tparam TSymbol Symbol.
+export template<typename TSymbol, typename T>
+struct SymbolBinder {
+    using symbol_type = TSymbol;
+    using value_type = std::remove_cvref_t<T>;
+    using deduced_type = T;
+
+    template<typename U>
+        requires std::is_convertible_v<U&&, requalify_as_const_t<remove_rvalue_reference_t<T>>>
+    constexpr SymbolBinder(TSymbol, U&& x) noexcept(
+        std::is_nothrow_convertible_v<U&&, requalify_as_const_t<remove_rvalue_reference_t<T>>>)
+        : value{std::forward<U>(x)} {}
+
+    auto operator()() const noexcept -> const value_type& {
+        return value;
+    }
+
+public:
+    static constexpr TSymbol symbol{};
+
+private:
+    requalify_as_const_t<remove_rvalue_reference_t<T>> value;
+};
+
+template<typename TSymbol, typename T>
+SymbolBinder(TSymbol, T&&) -> SymbolBinder<TSymbol, T&&>;
 
 /// @brief Define the Symbol class, the atom of a formula.
 /// This class defines the core type representing a symbol abstraction in a formula.
 /// @tparam Should be ignored and not specified, it is used to define different unique types for the
 /// Symbol.
-export template<auto = [] {}>
-struct Symbol {};
+export template<auto ID = [] {}>
+struct Symbol {
+    // This variable is used as a unique id for comparison and ordering.
+    static constexpr const void* address = std::addressof(ID);
+
+    template<typename T>
+    constexpr auto operator=(T&& value) -> SymbolBinder<Symbol, T&&> {
+        return SymbolBinder{*this, std::forward<T>(value)};
+    }
+};
+
+export template<auto Lhs, auto Rhs>
+constexpr auto operator<=>(Symbol<Lhs>, Symbol<Rhs>) -> std::strong_ordering {
+    return std::compare_three_way{}(Symbol<Lhs>::address, Symbol<Rhs>::address);
+}
 
 } // namespace tars

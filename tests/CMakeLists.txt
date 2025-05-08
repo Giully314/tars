@@ -13,7 +13,13 @@ add_executable(
 )
 target_sources(test_mp PRIVATE test_mp.cpp)
 target_link_libraries(test_mp PRIVATE GTest::gtest_main tars)
-# target_include_directories(test_mp PRIVATE ${TARS_SOURCE_DIR}/src)    
+
+add_executable(
+    test_symbol
+)
+target_sources(test_symbol PRIVATE test_symbol.cpp)
+target_link_libraries(test_symbol PRIVATE GTest::gtest_main tars)
     
 include(GoogleTest)
 gtest_discover_tests(test_mp)
+gtest_discover_tests(test_symbol)

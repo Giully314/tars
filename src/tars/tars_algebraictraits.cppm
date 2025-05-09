@@ -13,12 +13,12 @@ import std;
 
 export namespace tars {
 struct Uncostrained {
-    template<typename T>
+    template <typename T>
     struct trait: std::true_type {};
 };
 
 struct Real {
-    template<typename T>
+    template <typename T>
     struct trait: std::is_floating_point<T> {};
 };
 

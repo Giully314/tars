@@ -32,7 +32,7 @@ Language: Cpp
 PointerAlignment: Left
 ReferenceAlignment: Left
 SpaceAfterCStyleCast: false
-SpaceAfterTemplateKeyword: false
+SpaceAfterTemplateKeyword: true
 SpaceAroundPointerQualifiers: After
 SpaceBeforeCaseColon: false
 SpaceBeforeCtorInitializerColon: false

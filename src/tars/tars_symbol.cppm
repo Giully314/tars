@@ -30,7 +30,6 @@
 export module tars.symbol;
 
 import std;
-import tars.mp;
 import tars.type_traits;
 import tars.algebraic_traits;
 
